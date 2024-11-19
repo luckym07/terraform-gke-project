@@ -1,0 +1,31 @@
+controller:
+  service:
+    type: LoadBalancer  # Expose the NGINX Ingress Controller externally
+    ports:
+      - name: http
+        port: 80           # HTTP traffic on port 80
+        targetPort: 80
+      - name: https
+        port: 443          # HTTPS traffic on port 443
+        targetPort: 443
+
+  ingressClass: nginx  # Define the ingress class
+
+  ingress:
+    enabled: true       # Enable ingress rules
+    hosts:
+      - name: juice-shop.local  # The domain for your application
+        path: /                  # Path to your app
+        tls: true                # Enable TLS
+        tlsSecret: ssl-certificate  # Reference the SSL secret for TLS termination
+
+  # Additional settings for TLS certificate mounting (optional)
+  extraVolumes:
+    - name: ssl-certificate
+      secret:
+        secretName: ssl-certificate  # The Kubernetes secret with the SSL cert
+
+  extraVolumeMounts:
+    - name: ssl-certificate
+      mountPath: /etc/nginx/secrets  # Mount the secret at a specific path
+      readOnly: true  # Ensure it's mounted read-only

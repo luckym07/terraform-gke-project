@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: juice-shop
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: juice-shop
+  template:
+    metadata:
+      labels:
+        app: juice-shop
+    spec:
+      containers:
+        - name: juice-shop
+          image: bkimminich/juice-shop:v15.0.0
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: "250m"        # Request 250 millicores of CPU
+              memory: "512Mi"     # Request 512 MiB of memory
+            limits:
+              cpu: "500m"         # Limit the CPU usage to 500 millicores
+              memory: "1Gi"       # Limit the memory usage to 1 GiB
